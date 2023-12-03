@@ -17,11 +17,6 @@ if (API_URL === undefined) {
   throw new Error("No API_URL provided")
 }
 
-const chooseReplyMessageWhenSuccessRegisterCommand = () => {
-  const messages = ["ものしりですね", "なるほど", "へー", "ふーん"]
-  return messages[Math.floor(Math.random() * messages.length)]
-}
-
 // Learn more at https://deno.land/manual/examples/module_metadata#concepts
 if (import.meta.main) {
   const bot = createBot({
@@ -103,7 +98,7 @@ if (import.meta.main) {
             {
               type: InteractionResponseTypes.ChannelMessageWithSource,
               data: {
-                content: chooseReplyMessageWhenSuccessRegisterCommand(),
+                content: `「${word}」は「${meaning}」なんですね！覚えました！`,
               },
             }
           )
