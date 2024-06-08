@@ -65,13 +65,18 @@ if (import.meta.main) {
         // hyokachanがパニックしたらレスポンスは空文字になる
         if ((await hyokaChanResp.clone().text()) === "") {
           console.error("Failed to get response from hyoka-chan")
+          await bot.helpers.sendMessage(message.channelId, {
+            content: json.value,
+          })
           return
         }
 
         const hyokaChanJson = await hyokaChanResp.json()
         console.log(hyokaChanJson)
         if (hyokaChanJson.result === null) {
-          return
+          await bot.helpers.sendMessage(message.channelId, {
+            content: json.value,
+          })
         }
 
         await bot.helpers.sendMessage(message.channelId, {
