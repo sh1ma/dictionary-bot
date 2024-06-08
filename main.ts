@@ -77,6 +77,7 @@ if (import.meta.main) {
           await bot.helpers.sendMessage(message.channelId, {
             content: json.value,
           })
+          return
         }
 
         await bot.helpers.sendMessage(message.channelId, {
