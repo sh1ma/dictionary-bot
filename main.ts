@@ -12,9 +12,14 @@ if (TOKEN === undefined) {
 }
 
 const API_URL = Deno.env.get("API_URL")
+const HYOKACHAN_URL = Deno.env.get("HYOKACHAN_URL")
 
 if (API_URL === undefined) {
   throw new Error("No API_URL provided")
+}
+
+if (HYOKACHAN_URL === undefined) {
+  throw new Error("No HYOKACHAN_URL provided")
 }
 
 // Learn more at https://deno.land/manual/examples/module_metadata#concepts
@@ -52,9 +57,25 @@ if (import.meta.main) {
         if (json === null || json.value === null) {
           return
         }
+        const hyokaChanResp = await fetch(`${HYOKACHAN_URL}`, {
+          method: "POST",
+          body: json.value,
+        })
+
+        // hyokachanがパニックしたらレスポンスは空文字になる
+        if ((await hyokaChanResp.clone().text()) === "") {
+          console.error("Failed to get response from hyoka-chan")
+          return
+        }
+
+        const hyokaChanJson = await hyokaChanResp.json()
+        console.log(hyokaChanJson)
+        if (hyokaChanJson.result === null) {
+          return
+        }
 
         await bot.helpers.sendMessage(message.channelId, {
-          content: json.value,
+          content: (await hyokaChanJson).result,
         })
       },
 
